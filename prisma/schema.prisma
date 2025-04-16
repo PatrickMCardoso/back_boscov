@@ -8,31 +8,33 @@ datasource db {
 }
 
 model Usuario {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   nome            String
   senha           String
-  email           String   @unique
-  status          Int?
+  email           String    @unique
+  status          Int       @default(1) // 1 = ativo, 0 = inativo
   apelido         String?
-  dataNascimento  DateTime @map("data_nascimento")
-  createdAt       DateTime @default(now()) @map("data_criacao")
-  updatedAt       DateTime @updatedAt @map("data_atualizacao")
-  tipoUsuario     String   @map("tipo_usuario")
+  dataNascimento  DateTime  @map("data_nascimento")
+  createdAt       DateTime  @default(now()) @map("data_criacao")
+  updatedAt       DateTime  @updatedAt @map("data_atualizacao")
+  tipoUsuario     String    @map("tipo_usuario")
   avaliacoes      Avaliacao[]
 }
 
 model Filme {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   nome            String
   diretor         String
-  anoLancamento   Int      @map("ano_lancamento")
+  anoLancamento   Int       @map("ano_lancamento")
   generoId        Int?
   duracao         Int
   produtora       String
   classificacao   String
   poster          String
+  status          Int       @default(1) // Adicionado para controle lógico
   avaliacoes      Avaliacao[]
 }
+
 
 model Avaliacao {
   idUsuario Int
