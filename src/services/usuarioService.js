@@ -21,7 +21,7 @@ const getUserById = async (id) => {
 
 const updateUser = async (id, data) => {
   return await prisma.usuario.update({
-    where: { id: Number(id) },
+    where: { id_usuario: Number(id) },
     data,
   });
 };
