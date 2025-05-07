@@ -33,18 +33,35 @@ model Filme {
   poster          String
   status          Int       @default(1) // Adicionado para controle lógico
   avaliacoes      Avaliacao[]
+  generos GeneroFilme[] 
 }
 
 
 model Avaliacao {
   idUsuario Int
   idFilme   Int
-  nota      Int
+  nota      Float
   comentario String
 
   usuario   Usuario @relation(fields: [idUsuario], references: [id])
   filme     Filme   @relation(fields: [idFilme], references: [id])
 
   @@id([idUsuario, idFilme])
+}
+
+model Genero {
+  id        Int             @id @default(autoincrement())
+  descricao String
+  filmes    GeneroFilme[]   // relação N:N
+}
+
+model GeneroFilme {
+  idGenero Int
+  idFilme  Int
+
+  genero Genero @relation(fields: [idGenero], references: [id])
+  filme  Filme  @relation(fields: [idFilme], references: [id])
+
+  @@id([idGenero, idFilme])
 }
 
