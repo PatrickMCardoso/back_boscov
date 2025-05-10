@@ -1,74 +1,74 @@
 const filmeService = require('../services/filmeService');
-const { FilmeSchema, FilmeUpdateSchema  } = require('../validations/filmeValidation');
+const { FilmeSchema, FilmeUpdateSchema } = require('../validations/filmeValidation');
+const { BadRequestError, NotFoundError } = require('../middlewares/errorHandler');
 
-const createFilme = async (req, res) => {
+const createFilme = async (req, res, next) => {
   try {
     const validated = FilmeSchema.parse(req.body);
     const filme = await filmeService.createFilme(validated);
     res.status(201).json(filme);
   } catch (error) {
-    res.status(400).json({ error: error.errors || 'Erro ao criar filme.' });
+    next(error);
   }
 };
 
-const listFilmes = async (req, res) => {
+const listFilmes = async (req, res, next) => {
   try {
     const filmes = await filmeService.listFilmes();
     res.json(filmes);
   } catch (error) {
-    res.status(500).json({ error: error.errors || 'Erro ao buscar filmes.' });
+    next(error);
   }
 };
 
-const getFilmeById = async (req, res) => {
+const getFilmeById = async (req, res, next) => {
   try {
     const filme = await filmeService.getFilmeById(req.params.id);
-    if (!filme) return res.status(404).json({ error: 'Filme não encontrado.' });
+    if (!filme) {
+      throw new NotFoundError('Filme não encontrado.');
+    }
     res.json(filme);
   } catch (error) {
-    res.status(500).json({ error: error.errors || 'Erro ao buscar filme.' });
+    next(error);
   }
 };
 
-const updateFilme = async (req, res) => {
-  const { id } = req.params;
-
+const updateFilme = async (req, res, next) => {
   try {
     const dadosAtualizados = FilmeUpdateSchema.parse(req.body);
-
-    const filmeAtualizado = await filmeService.updateFilme(Number(id), dadosAtualizados);
+    const filmeAtualizado = await filmeService.updateFilme(Number(req.params.id), dadosAtualizados);
 
     if (!filmeAtualizado) {
-      return res.status(404).json({ erro: 'Filme não encontrado.' });
+      throw new NotFoundError('Filme não encontrado.');
     }
 
     res.status(200).json(filmeAtualizado);
   } catch (error) {
-    if (error.name === 'ZodError') {
-      const errosFormatados = error.errors.map((err) => err.message);
-      return res.status(400).json({ erros: errosFormatados });
-    }
-
-    console.error(error);
-    res.status(500).json({ erro: 'Erro ao atualizar o filme.' });
+    next(error);
   }
 };
 
-const deleteFilme = async (req, res) => {
+const deleteFilme = async (req, res, next) => {
   try {
-    await filmeService.deleteFilme(req.params.id);
+    const filme = await filmeService.deleteFilme(req.params.id);
+    if (!filme) {
+      throw new NotFoundError('Filme não encontrado.');
+    }
     res.status(204).send();
   } catch (error) {
-    res.status(400).json({ error: error.errors || 'Erro ao deletar filme.' });
+    next(error);
   }
 };
 
-const reactivateFilme = async (req, res) => {
+const reactivateFilme = async (req, res, next) => {
   try {
     const filme = await filmeService.reactivateFilme(req.params.id);
+    if (!filme) {
+      throw new NotFoundError('Filme não encontrado ou já está ativo.');
+    }
     res.json(filme);
   } catch (error) {
-    res.status(400).json({ error: error.errors || 'Erro ao reativar filme.' });
+    next(error);
   }
 };
 
@@ -78,5 +78,5 @@ module.exports = {
   getFilmeById,
   updateFilme,
   deleteFilme,
-  reactivateFilme
+  reactivateFilme,
 };

@@ -1,79 +1,69 @@
-const userService = require('../services/usuarioService');
+const usuarioService = require('../services/usuarioService');
 const { UsuarioSchema, UsuarioUpdateSchema } = require('../validations/usuarioValidation');
+const { NotFoundError } = require('../middlewares/errorHandler');
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   try {
     const validated = UsuarioSchema.parse(req.body);
     const usuario = await usuarioService.createUser(validated);
     res.status(201).json(usuario);
   } catch (error) {
-    res.status(400).json({ error: error.errors || 'Erro ao criar usuário.' });
+    next(error); // vai para o errorHandler
   }
 };
 
-const listUsers = async (req, res) => {
+const listUsers = async (req, res, next) => {
   try {
-    const users = await userService.listUsers();
+    const users = await usuarioService.listUsers();
     res.json(users);
   } catch (error) {
-    res.status(500).json({ error: error.errors || 'Erro ao buscar usuários.' });
+    next(error);
   }
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   try {
-    const user = await userService.getUserById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: 'Usuário nao encontrado' });
-    }
+    const user = await usuarioService.getUserById(req.params.id);
+    if (!user) throw new NotFoundError('Usuário não encontrado.');
     res.json(user);
   } catch (error) {
-    res.status(500).json({ error: error.errors || 'Erro ao buscar usuário.' });
+    next(error);
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   const { id } = req.params;
 
   try {
     const dadosAtualizados = UsuarioUpdateSchema.parse(req.body);
-
     const usuarioAtualizado = await usuarioService.updateUser(Number(id), dadosAtualizados);
 
-    if (!usuarioAtualizado) {
-      return res.status(404).json({ erro: 'Usuário não encontrado.' });
-    }
-
+    if (!usuarioAtualizado) throw new NotFoundError('Usuário não encontrado.');
     res.status(200).json(usuarioAtualizado);
   } catch (error) {
-    if (error.name === 'ZodError') {
-      const errosFormatados = error.errors.map((err) => err.message);
-      return res.status(400).json({ erros: errosFormatados });
-    }
-
-    console.error(error);
-    res.status(500).json({ erro: 'Erro ao atualizar o usuário.' });
+    next(error);
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
-    await userService.deleteUser(req.params.id);
+    const deleted = await usuarioService.deleteUser(req.params.id);
+    if (!deleted) throw new NotFoundError('Usuário não encontrado para exclusão.');
     res.status(204).send();
   } catch (error) {
-    res.status(400).json({ error: error.errors || 'Erro ao deletar usuário.' });
+    next(error);
   }
 };
 
-const reactivateUser = async (req, res) => {
+const reactivateUser = async (req, res, next) => {
   try {
-    const reactivated = await userService.reactivateUser(req.params.id);
+    const reactivated = await usuarioService.reactivateUser(req.params.id);
+    if (!reactivated) throw new NotFoundError('Usuário não encontrado para reativação.');
     res.json(reactivated);
   } catch (error) {
-    res.status(400).json({ error: error.errors || 'Erro ao reativar usuário.' });
+    next(error);
   }
 };
-
 
 module.exports = {
   createUser,
