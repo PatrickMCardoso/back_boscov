@@ -28,7 +28,8 @@ const UsuarioSchema = z.object({
   status: z.number()
     .int({ message: 'O campo "status" deve ser um número inteiro.' })
     .optional()
-});
+})
+  .strict({ message: 'Campos não reconhecidos foram enviados.' });
 
 const UsuarioUpdateSchema = UsuarioSchema.partial();
 
