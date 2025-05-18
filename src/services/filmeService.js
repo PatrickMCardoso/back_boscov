@@ -2,6 +2,14 @@ const prisma = require('../../prisma/prismaClient');
 const { NotFoundError } = require('../errors/exceptions');
 
 const createFilme = async (data) => {
+  
+  const existingFilme = await prisma.filme.findFirst({
+    where: { nome: data.nome },
+  });
+  if (existingFilme) {
+    throw new Error('Já existe um filme com este nome.');
+  }
+
   return await prisma.filme.create({ data });
 };
 

@@ -2,6 +2,14 @@ const prisma = require('../../prisma/prismaClient');
 const { NotFoundError } = require('../errors/exceptions');
 
 const createUser = async (data) => {
+
+  const existingUser = await prisma.usuario.findUnique({
+    where: { email: data.email },
+  });
+  if (existingUser) {
+    throw new Error('E-mail já cadastrado.');
+  }
+
   return await prisma.usuario.create({ data });
 };
 
