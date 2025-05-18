@@ -1,13 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {
-  createFilme,
-  listFilmes,
-  getFilmeById,
-  updateFilme,
-  deleteFilme,
-  reactivateFilme
-} = require('../controllers/filmes');
+const { createFilme, listFilmes, getFilmeById, updateFilme, deleteFilme, reactivateFilme } = require('../controllers/filmesController');
 
 router.post('/filme', createFilme);
 router.get('/filmes', listFilmes);

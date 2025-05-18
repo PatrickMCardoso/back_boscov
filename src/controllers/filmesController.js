@@ -1,6 +1,5 @@
 const filmeService = require('../services/filmeService');
 const { FilmeSchema, FilmeUpdateSchema } = require('../validations/filmeValidation');
-const { BadRequestError, NotFoundError } = require('../middlewares/errorHandler');
 
 const createFilme = async (req, res, next) => {
   try {
@@ -24,9 +23,6 @@ const listFilmes = async (req, res, next) => {
 const getFilmeById = async (req, res, next) => {
   try {
     const filme = await filmeService.getFilmeById(req.params.id);
-    if (!filme) {
-      throw new NotFoundError('Filme não encontrado.');
-    }
     res.json(filme);
   } catch (error) {
     next(error);
@@ -35,13 +31,8 @@ const getFilmeById = async (req, res, next) => {
 
 const updateFilme = async (req, res, next) => {
   try {
-    const dadosAtualizados = FilmeUpdateSchema.parse(req.body);
-    const filmeAtualizado = await filmeService.updateFilme(Number(req.params.id), dadosAtualizados);
-
-    if (!filmeAtualizado) {
-      throw new NotFoundError('Filme não encontrado.');
-    }
-
+    const validated = FilmeUpdateSchema.parse(req.body);
+    const filmeAtualizado = await filmeService.updateFilme(req.params.id, validated);
     res.status(200).json(filmeAtualizado);
   } catch (error) {
     next(error);
@@ -50,10 +41,7 @@ const updateFilme = async (req, res, next) => {
 
 const deleteFilme = async (req, res, next) => {
   try {
-    const filme = await filmeService.deleteFilme(req.params.id);
-    if (!filme) {
-      throw new NotFoundError('Filme não encontrado.');
-    }
+    await filmeService.deleteFilme(req.params.id);
     res.status(204).send();
   } catch (error) {
     next(error);
@@ -63,9 +51,6 @@ const deleteFilme = async (req, res, next) => {
 const reactivateFilme = async (req, res, next) => {
   try {
     const filme = await filmeService.reactivateFilme(req.params.id);
-    if (!filme) {
-      throw new NotFoundError('Filme não encontrado ou já está ativo.');
-    }
     res.json(filme);
   } catch (error) {
     next(error);

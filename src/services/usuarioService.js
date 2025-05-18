@@ -1,4 +1,5 @@
 const prisma = require('../../prisma/prismaClient');
+const { NotFoundError } = require('../errors/exceptions');
 
 const createUser = async (data) => {
   return await prisma.usuario.create({ data });
@@ -11,31 +12,47 @@ const listUsers = async () => {
 };
 
 const getUserById = async (id) => {
-  return await prisma.usuario.findFirst({
+  const user = await prisma.usuario.findFirst({
     where: {
-      id: Number(id), 
+      id: Number(id),
       status: 1,
     },
   });
+  if (!user) {
+    throw new NotFoundError('Usuário não encontrado.');
+  }
+  return user;
 };
 
 const updateUser = async (id, data) => {
+  const user = await prisma.usuario.findUnique({ where: { id: Number(id) } });
+  if (!user || user.status === 0) {
+    throw new NotFoundError('Usuário não encontrado ou inativo.');
+  }
   return await prisma.usuario.update({
-    where: { id: Number(id) }, 
+    where: { id: Number(id) },
     data,
   });
 };
 
 const deleteUser = async (id) => {
+  const user = await prisma.usuario.findUnique({ where: { id: Number(id) } });
+  if (!user || user.status === 0) {
+    throw new NotFoundError('Usuário não encontrado ou já inativo.');
+  }
   return await prisma.usuario.update({
-    where: { id: Number(id) }, 
+    where: { id: Number(id) },
     data: { status: 0 },
   });
 };
 
 const reactivateUser = async (id) => {
+  const user = await prisma.usuario.findUnique({ where: { id: Number(id) } });
+  if (!user || user.status === 1) {
+    throw new NotFoundError('Usuário não encontrado ou já ativo.');
+  }
   return await prisma.usuario.update({
-    where: { id: Number(id) }, 
+    where: { id: Number(id) },
     data: { status: 1 },
   });
 };

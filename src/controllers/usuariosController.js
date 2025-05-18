@@ -1,14 +1,13 @@
 const usuarioService = require('../services/usuarioService');
 const { UsuarioSchema, UsuarioUpdateSchema } = require('../validations/usuarioValidation');
-const { NotFoundError } = require('../middlewares/errorHandler');
 
 const createUser = async (req, res, next) => {
   try {
     const validated = UsuarioSchema.parse(req.body);
-    const usuario = await usuarioService.createUser(validated);
-    res.status(201).json(usuario);
+    const user = await usuarioService.createUser(validated);
+    res.status(201).json(user);
   } catch (error) {
-    next(error); // vai para o errorHandler
+    next(error);
   }
 };
 
@@ -24,7 +23,6 @@ const listUsers = async (req, res, next) => {
 const getUserById = async (req, res, next) => {
   try {
     const user = await usuarioService.getUserById(req.params.id);
-    if (!user) throw new NotFoundError('Usuário não encontrado.');
     res.json(user);
   } catch (error) {
     next(error);
@@ -32,14 +30,10 @@ const getUserById = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const { id } = req.params;
-
   try {
-    const dadosAtualizados = UsuarioUpdateSchema.parse(req.body);
-    const usuarioAtualizado = await usuarioService.updateUser(Number(id), dadosAtualizados);
-
-    if (!usuarioAtualizado) throw new NotFoundError('Usuário não encontrado.');
-    res.status(200).json(usuarioAtualizado);
+    const validated = UsuarioUpdateSchema.parse(req.body);
+    const user = await usuarioService.updateUser(req.params.id, validated);
+    res.json(user);
   } catch (error) {
     next(error);
   }
@@ -47,8 +41,7 @@ const updateUser = async (req, res, next) => {
 
 const deleteUser = async (req, res, next) => {
   try {
-    const deleted = await usuarioService.deleteUser(req.params.id);
-    if (!deleted) throw new NotFoundError('Usuário não encontrado para exclusão.');
+    await usuarioService.deleteUser(req.params.id);
     res.status(204).send();
   } catch (error) {
     next(error);
@@ -57,9 +50,8 @@ const deleteUser = async (req, res, next) => {
 
 const reactivateUser = async (req, res, next) => {
   try {
-    const reactivated = await usuarioService.reactivateUser(req.params.id);
-    if (!reactivated) throw new NotFoundError('Usuário não encontrado para reativação.');
-    res.json(reactivated);
+    const user = await usuarioService.reactivateUser(req.params.id);
+    res.json(user);
   } catch (error) {
     next(error);
   }
@@ -71,5 +63,5 @@ module.exports = {
   getUserById,
   updateUser,
   deleteUser,
-  reactivateUser
+  reactivateUser,
 };

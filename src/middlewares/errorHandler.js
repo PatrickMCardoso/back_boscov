@@ -1,28 +1,5 @@
 const { ZodError } = require('zod');
-
-class NotFoundError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'NotFoundError';
-    this.statusCode = 404;
-  }
-}
-
-class BadRequestError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = 'BadRequestError';
-    this.statusCode = 400;
-  }
-}
-
-class UnauthorizedError extends Error {
-    constructor(message = 'Não autorizado') {
-      super(message);
-      this.name = 'UnauthorizedError';
-      this.statusCode = 401;
-    }
-  }
+const { NotFoundError, BadRequestError, UnauthorizedError } = require('../exceptions/exceptions');
 
 const errorHandler = (err, req, res, next) => {
   // Verifica se o erro é do Zod
@@ -32,7 +9,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Verifica se o erro é uma exceção personalizada
-  if (err instanceof BadRequestError || err instanceof NotFoundError) {
+  if (err instanceof BadRequestError || err instanceof NotFoundError || err instanceof UnauthorizedError) {
     return res.status(err.statusCode).json({ error: err.message });
   }
 
@@ -41,9 +18,4 @@ const errorHandler = (err, req, res, next) => {
   res.status(500).json({ error: 'Erro interno do servidor.' });
 };
 
-module.exports = {
-  errorHandler,
-  NotFoundError,
-  BadRequestError,
-  UnauthorizedError,
-};
+module.exports = { errorHandler };

@@ -1,5 +1,5 @@
 const prisma = require('../../prisma/prismaClient');
-const { NotFoundError } = require('../middlewares/errorHandler');
+const { NotFoundError } = require('../errros/exceptions');
 
 const createFilme = async (data) => {
   return await prisma.filme.create({ data });
@@ -12,22 +12,26 @@ const listFilmes = async () => {
 };
 
 const getFilmeById = async (id) => {
-  return await prisma.filme.findFirst({
+  const filme = await prisma.filme.findFirst({
     where: {
       id: Number(id),
       status: 1,
     },
   });
+  if (!filme) {
+    throw new NotFoundError('Filme não encontrado.');
+  }
+  return filme;
 };
 
 const updateFilme = async (id, data) => {
-  const filme = await prisma.filme.findUnique({ where: { id } });
+  const filme = await prisma.filme.findUnique({ where: { id: Number(id) } });
   if (!filme || filme.status === 0) {
-    return null;
+    throw new NotFoundError('Filme não encontrado ou inativo.');
   }
 
   return await prisma.filme.update({
-    where: { id },
+    where: { id: Number(id) },
     data,
   });
 };
@@ -35,7 +39,7 @@ const updateFilme = async (id, data) => {
 const deleteFilme = async (id) => {
   const filme = await prisma.filme.findUnique({ where: { id: Number(id) } });
   if (!filme || filme.status === 0) {
-    return null;
+    throw new NotFoundError('Filme não encontrado ou já inativo.');
   }
 
   return await prisma.filme.update({
@@ -47,7 +51,7 @@ const deleteFilme = async (id) => {
 const reactivateFilme = async (id) => {
   const filme = await prisma.filme.findUnique({ where: { id: Number(id) } });
   if (!filme || filme.status === 1) {
-    return null;
+    throw new NotFoundError('Filme não encontrado ou já ativo.');
   }
 
   return await prisma.filme.update({
