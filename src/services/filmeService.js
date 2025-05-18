@@ -1,5 +1,5 @@
 const prisma = require('../../prisma/prismaClient');
-const { NotFoundError } = require('../errros/exceptions');
+const { NotFoundError } = require('../errors/exceptions');
 
 const createFilme = async (data) => {
   return await prisma.filme.create({ data });

@@ -1,5 +1,5 @@
 const { ZodError } = require('zod');
-const { NotFoundError, BadRequestError, UnauthorizedError } = require('../exceptions/exceptions');
+const { NotFoundError, BadRequestError, UnauthorizedError } = require('../errors/exceptions');
 
 const errorHandler = (err, req, res, next) => {
   // Verifica se o erro é do Zod
