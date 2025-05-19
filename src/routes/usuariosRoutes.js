@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { createUser, listUsers, getUserById, updateUser, deleteUser, reactivateUser } = require('../controllers/usuariosController');
+const { authenticateUser, authorizeAdmin, authorizeAdminOrComum } = require('../middlewares/auth');
+const { createUser, loginUser, listUsers, getUserById, updateUser, deleteUser, reactivateUser } = require('../controllers/usuariosController');
 
+// Rotas públicas
 router.post('/usuario', createUser);
-router.get('/usuarios', listUsers);
-router.get('/usuario/:id', getUserById);
-router.put('/usuario/:id', updateUser);
-router.delete('/usuario/:id', deleteUser);
-router.patch('/usuario/:id/reativar', reactivateUser);
+router.post('/login', loginUser);
+
+// Rotas protegidas
+router.get('/usuarios', authenticateUser, authorizeAdmin, listUsers); // Apenas admin
+router.get('/usuario/:id', authenticateUser, authorizeAdminOrComum, getUserById); // Admin ou comum
+router.put('/usuario/:id', authenticateUser, authorizeAdmin, updateUser); // Apenas admin
+router.delete('/usuario/:id', authenticateUser, authorizeAdmin, deleteUser); // Apenas admin
+router.patch('/usuario/:id/reativar', authenticateUser, authorizeAdmin, reactivateUser); // Apenas admin
 
 module.exports = router;

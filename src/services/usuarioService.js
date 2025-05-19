@@ -1,5 +1,6 @@
 const prisma = require('../../prisma/prismaClient');
 const { NotFoundError } = require('../errors/exceptions');
+const bcrypt = require('bcrypt');
 
 const createUser = async (data) => {
 
@@ -9,6 +10,8 @@ const createUser = async (data) => {
   if (existingUser) {
     throw new Error('E-mail já cadastrado.');
   }
+
+  data.dataNascimento = new Date(data.dataNascimento);
 
   return await prisma.usuario.create({ data });
 };
@@ -37,6 +40,11 @@ const updateUser = async (id, data) => {
   if (!user || user.status === 0) {
     throw new NotFoundError('Usuário não encontrado ou inativo.');
   }
+
+  if (data.senha) {
+    data.senha = await bcrypt.hash(data.senha, 10);
+  }
+
   return await prisma.usuario.update({
     where: { id: Number(id) },
     data,
@@ -65,8 +73,15 @@ const reactivateUser = async (id) => {
   });
 };
 
+const getUserByEmail = async (email) => {
+  return await prisma.usuario.findUnique({
+    where: { email },
+  });
+};
+
 module.exports = {
   createUser,
+  getUserByEmail,
   listUsers,
   getUserById,
   updateUser,
