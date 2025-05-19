@@ -9,7 +9,13 @@ async function seedGeneros() {
       { descricao: "Comédia" },
       { descricao: "Terror" },
       { descricao: "Drama" },
-      { descricao: "Ficção Científica" }
+      { descricao: "Aventura" },
+      { descricao: "Romance" },
+      { descricao: "Suspense" },
+      { descricao: "Musical" },
+      { descricao: "Ficção Científica" },
+      { descricao: "Histórico" },
+      { descricao: "Documentário" }
     ],
   });
   console.log("Gêneros adicionados com sucesso!");
