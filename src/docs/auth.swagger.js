@@ -18,12 +18,11 @@
  *         email:
  *           type: string
  *           format: email
- *           example: usuario@example.com
+ *           example: usuario@exemplo.com
  *         senha:
  *           type: string
  *           format: password
  *           example: "123456"
-
  *     LoginResponse:
  *       type: object
  *       properties:
@@ -31,27 +30,12 @@
  *           type: string
  *           description: Token JWT para autenticação
  *           example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-
  *     UnauthorizedError:
  *       type: object
  *       properties:
  *         error:
  *           type: string
  *           example: Credenciais inválidas.
-
- *     TokenMissingError:
- *       type: object
- *       properties:
- *         error:
- *           type: string
- *           example: Token não fornecido.
-
- *     TokenInvalidError:
- *       type: object
- *       properties:
- *         error:
- *           type: string
- *           example: Token inválido.
  */
 
 /**

@@ -89,35 +89,6 @@
 
 /**
  * @swagger
- * /login:
- *   post:
- *     summary: Login do usuário
- *     tags: [Usuário]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - senha
- *             properties:
- *               email:
- *                 type: string
- *                 example: joao@email.com
- *               senha:
- *                 type: string
- *                 example: senha123
- *     responses:
- *       200:
- *         description: Login realizado com sucesso
- *       401:
- *         description: Credenciais inválidas
- */
-
-/**
- * @swagger
  * /usuarios:
  *   get:
  *     summary: Lista todos os usuários ativos
