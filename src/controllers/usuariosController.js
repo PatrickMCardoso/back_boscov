@@ -63,7 +63,6 @@ const reactivateUser = async (req, res, next) => {
 
 module.exports = {
   createUser,
-  loginUser,
   listUsers,
   getUserById,
   updateUser,
