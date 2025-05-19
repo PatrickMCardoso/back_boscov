@@ -4,9 +4,9 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./src/config/swagger');
 const { errorHandler } = require('./src/middlewares/errorHandler');
 
-const usuariosRoutes = require('./src/routes/usuarios');
-const filmesRoutes = require('./src/routes/filmes');
-const avaliacoesRoutes = require('./src/routes/avaliacao');
+const usuariosRoutes = require('./src/routes/usuariosRoutes');
+const filmesRoutes = require('./src/routes/filmesRoutes');
+const avaliacoesRoutes = require('./src/routes/avaliacaoRoutes');
 
 app.use(express.json());
 
