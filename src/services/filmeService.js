@@ -68,6 +68,21 @@ const reactivateFilme = async (id) => {
   });
 };
 
+const searchFilmesByName = async (nome) => {
+  return await prisma.filme.findMany({
+    where: {
+      nome: {
+        contains: nome,
+        mode: 'insensitive', 
+      },
+      status: 1, 
+    },
+    orderBy: {
+      nome: 'asc', 
+    },
+  });
+};
+
 module.exports = {
   createFilme,
   listFilmes,
@@ -75,4 +90,5 @@ module.exports = {
   updateFilme,
   deleteFilme,
   reactivateFilme,
+  searchFilmesByName,
 };

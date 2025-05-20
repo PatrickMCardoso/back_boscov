@@ -57,6 +57,20 @@ const reactivateFilme = async (req, res, next) => {
   }
 };
 
+const searchFilmes = async (req, res, next) => {
+  try {
+    const { nome } = req.query; 
+    if (!nome) {
+      return res.status(400).json({ error: 'O parâmetro "nome" é obrigatório.' });
+    }
+
+    const filmes = await filmeService.searchFilmesByName(nome);
+    res.json(filmes);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createFilme,
   listFilmes,
@@ -64,4 +78,5 @@ module.exports = {
   updateFilme,
   deleteFilme,
   reactivateFilme,
+  searchFilmes,
 };
