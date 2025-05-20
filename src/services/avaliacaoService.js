@@ -3,21 +3,26 @@ const { NotFoundError } = require('../errors/exceptions');
 
 const createAvaliacao = async (data) => {
     const usuario = await prisma.usuario.findFirst({
-        where: { id: data.idUsuario, status: 1 },
+      where: { id: data.idUsuario, status: 1 },
     });
     if (!usuario) {
-        throw new NotFoundError('Usuário não encontrado ou inativo.');
+      throw new NotFoundError('Usuário não encontrado ou inativo.');
     }
-
+  
     const filme = await prisma.filme.findFirst({
-        where: { id: data.idFilme, status: 1 },
+      where: { id: data.idFilme, status: 1 },
     });
     if (!filme) {
-        throw new NotFoundError('Filme não encontrado ou inativo.');
+      throw new NotFoundError('Filme não encontrado ou inativo.');
     }
-
-    return await prisma.avaliacao.create({ data });
-};
+  
+    const avaliacao = await prisma.avaliacao.create({ data });
+  
+    // Recalcula a média de avaliações do filme
+    await recalculateMediaAvaliacoes(data.idFilme);
+  
+    return avaliacao;
+  };
 
 const getAvaliacoesByUsuario = async (idUsuario) => {
     const avaliacoes = await prisma.avaliacao.findMany({
@@ -58,22 +63,26 @@ const getAvaliacoesByFilme = async (idFilme) => {
 
 const updateAvaliacao = async (id, data) => {
     const avaliacao = await prisma.avaliacao.findUnique({
-        where: { id: Number(id) },
-        include: {
-            usuario: true,
-            filme: true,
-        },
+      where: { id: Number(id) },
+      include: {
+        usuario: true,
+        filme: true,
+      },
     });
-
+  
     if (!avaliacao || avaliacao.usuario.status === 0 || avaliacao.filme.status === 0) {
-        throw new NotFoundError('Avaliação não encontrada ou associada a um usuário ou filme inativo.');
+      throw new NotFoundError('Avaliação não encontrada ou associada a um usuário ou filme inativo.');
     }
-
-    return await prisma.avaliacao.update({
-        where: { id: Number(id) },
-        data,
+  
+    const updatedAvaliacao = await prisma.avaliacao.update({
+      where: { id: Number(id) },
+      data,
     });
-};
+  
+    await recalculateMediaAvaliacoes(avaliacao.idFilme);
+  
+    return updatedAvaliacao;
+  };
 
 const deleteAvaliacao = async (id) => {
     const avaliacao = await prisma.avaliacao.findUnique({
@@ -94,10 +103,25 @@ const deleteAvaliacao = async (id) => {
     });
 };
 
+// Recalcula a média de avaliações de um filme
+const recalculateMediaAvaliacoes = async (idFilme) => {
+    const media = await prisma.avaliacao.aggregate({
+      where: { idFilme },
+      _avg: { nota: true },
+    });
+  
+    // Atualiza o campo mediaAvaliacoes no modelo Filme
+    await prisma.filme.update({
+      where: { id: idFilme },
+      data: { mediaAvaliacoes: media._avg.nota || 0 },
+    });
+  };
+
 module.exports = {
     createAvaliacao,
     getAvaliacoesByUsuario,
     getAvaliacoesByFilme,
     updateAvaliacao,
     deleteAvaliacao,
+    recalculateMediaAvaliacoes,
 };

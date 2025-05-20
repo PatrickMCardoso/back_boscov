@@ -32,6 +32,7 @@ model Filme {
   classificacao   String
   poster          String
   status          Int       @default(1) // Adicionado para controle lógico
+  mediaAvaliacoes Float?    @default(0)
   avaliacoes      Avaliacao[]
   generos GeneroFilme[] 
 }
