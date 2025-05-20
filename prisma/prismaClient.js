@@ -15,7 +15,8 @@ async function seedGeneros() {
       { descricao: "Musical" },
       { descricao: "Ficção Científica" },
       { descricao: "Histórico" },
-      { descricao: "Documentário" }
+      { descricao: "Documentário" },
+      { descricao: "Animação" },
     ],
   });
   console.log("Gêneros adicionados com sucesso!");

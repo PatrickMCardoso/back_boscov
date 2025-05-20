@@ -22,7 +22,17 @@ const loginUser = async (req, res, next) => {
     }
 
     const token = generateToken({ id: user.id, email: user.email, tipoUsuario: user.tipoUsuario });
-    res.json({ token });
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        nome: user.nome,
+        apelido: user.apelido || undefined,
+        email: user.email,
+        dataNascimento: user.dataNascimento,
+        tipoUsuario: user.tipoUsuario,
+      },
+    });
   } catch (error) {
     next(error);
   }
