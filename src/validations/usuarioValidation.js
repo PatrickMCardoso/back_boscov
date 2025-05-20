@@ -15,15 +15,14 @@ const UsuarioSchema = z.object({
     .max(100, { message: 'O campo "apelido" deve conter no máximo 100 caracteres.' })
     .optional(),
 
-  dataNascimento: z.string()
+    dataNascimento: z
+    .string()
     .refine((val) => {
       const date = new Date(val);
       return !isNaN(date.getTime());
     }, { message: 'O campo "dataNascimento" deve ser uma data válida.' }),
 
-  tipoUsuario: z.enum(['admin', 'comum'], {
-    message: 'O campo "tipoUsuario" deve ser "admin" ou "comum".'
-  }),
+  tipoUsuario: z.enum(['admin', 'comum']).optional(),
 
   status: z.number()
     .int({ message: 'O campo "status" deve ser um número inteiro.' })

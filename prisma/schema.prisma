@@ -17,7 +17,7 @@ model Usuario {
   dataNascimento  DateTime  @map("data_nascimento")
   createdAt       DateTime  @default(now()) @map("data_criacao")
   updatedAt       DateTime  @updatedAt @map("data_atualizacao")
-  tipoUsuario     String    @map("tipo_usuario")
+  tipoUsuario     String    @default("comum") @map("tipo_usuario")
   avaliacoes      Avaliacao[]
 }
 
