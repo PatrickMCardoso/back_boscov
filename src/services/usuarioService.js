@@ -45,6 +45,10 @@ const updateUser = async (id, data) => {
     data.senha = await bcrypt.hash(data.senha, 10);
   }
 
+  if (data.dataNascimento && typeof data.dataNascimento === "string") {
+    data.dataNascimento = new Date(data.dataNascimento);
+  }
+
   return await prisma.usuario.update({
     where: { id: Number(id) },
     data,
