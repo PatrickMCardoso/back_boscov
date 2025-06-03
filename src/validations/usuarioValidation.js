@@ -13,6 +13,7 @@ const UsuarioSchema = z.object({
 
   apelido: z.string()
     .max(100, { message: 'O campo "apelido" deve conter no máximo 100 caracteres.' })
+    .nullable()
     .optional(),
 
     dataNascimento: z
