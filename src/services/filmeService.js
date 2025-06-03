@@ -40,6 +40,13 @@ const createFilme = async (data) => {
 const listFilmes = async () => {
   return await prisma.filme.findMany({
     where: { status: 1 },
+    include: {
+      generos: {
+        include: {
+          genero: true,
+        },
+      },
+    },
   });
 };
 
@@ -138,6 +145,13 @@ const searchFilmesByName = async (nome) => {
     },
     orderBy: {
       nome: 'asc',
+    },
+    include: {
+      generos: {
+        include: {
+          genero: true,
+        },
+      },
     },
   });
 };
