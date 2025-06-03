@@ -26,7 +26,6 @@ model Filme {
   nome            String
   diretor         String
   anoLancamento   Int       @map("ano_lancamento")
-  generoId        Int?
   duracao         Int
   produtora       String
   classificacao   String
