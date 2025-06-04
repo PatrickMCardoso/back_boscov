@@ -39,7 +39,6 @@ const createFilme = async (data) => {
 
 const listFilmes = async () => {
   return await prisma.filme.findMany({
-    where: { status: 1 },
     include: {
       generos: {
         include: {
