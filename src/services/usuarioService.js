@@ -17,9 +17,7 @@ const createUser = async (data) => {
 };
 
 const listUsers = async () => {
-  return await prisma.usuario.findMany({
-    where: { status: 1 },
-  });
+  return await prisma.usuario.findMany(); 
 };
 
 const getUserById = async (id) => {
