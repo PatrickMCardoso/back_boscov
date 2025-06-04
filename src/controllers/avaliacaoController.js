@@ -11,6 +11,15 @@ const createAvaliacao = async (req, res, next) => {
   }
 };
 
+const getAllAvaliacoes = async (req, res, next) => {
+  try {
+    const avaliacoes = await avaliacaoService.getAllAvaliacoes();
+    res.json(avaliacoes);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getAvaliacoesByUsuario = async (req, res, next) => {
   try {
     const avaliacoes = await avaliacaoService.getAvaliacoesByUsuario(req.params.idUsuario);
@@ -43,8 +52,8 @@ const updateAvaliacao = async (req, res, next) => {
 const deleteAvaliacao = async (req, res, next) => {
   try {
     const { idUsuario, idFilme } = req.params;
-    await avaliacaoService.deleteAvaliacao({ idUsuario, idFilme });
-    res.status(204).send();
+    const mediaAvaliacoes = await avaliacaoService.deleteAvaliacao({ idUsuario, idFilme });
+    res.status(200).json({ message: "Avaliação excluída com sucesso.", mediaAvaliacoes });
   } catch (error) {
     next(error);
   }
@@ -52,6 +61,7 @@ const deleteAvaliacao = async (req, res, next) => {
 
 module.exports = {
   createAvaliacao,
+  getAllAvaliacoes,
   getAvaliacoesByUsuario,
   getAvaliacoesByFilme,
   updateAvaliacao,
