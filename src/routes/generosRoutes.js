@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const prisma = require('../../prisma/prismaClient');
 
+//Rota pública
 router.get('/generos', async (req, res, next) => {
   try {
     const generos = await prisma.genero.findMany();

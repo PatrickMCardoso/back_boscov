@@ -7,8 +7,8 @@ const loginRateLimiter = rateLimit({
   message: {
     error: 'Muitas tentativas de login. Tente novamente após 15 minutos.',
   },
-  standardHeaders: true, // Retorna informações de rate limit nos cabeçalhos `RateLimit-*`
-  legacyHeaders: false, // Desativa os cabeçalhos `X-RateLimit-*`
+  standardHeaders: true, 
+  legacyHeaders: false, 
 });
 
 // Middleware de Rate Limiting global (opcional)
