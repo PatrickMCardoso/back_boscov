@@ -12,9 +12,6 @@
  *     Avaliacao:
  *       type: object
  *       properties:
- *         id:
- *           type: integer
- *           example: 1
  *         idUsuario:
  *           type: integer
  *           example: 2
@@ -31,15 +28,10 @@
  *           type: string
  *           maxLength: 500
  *           example: "Ótimo filme!"
- *         status:
- *           type: integer
- *           example: 1
- *         createdAt:
- *           type: string
- *           format: date-time
- *         updatedAt:
- *           type: string
- *           format: date-time
+ *         usuario:
+ *           $ref: '#/components/schemas/Usuario'
+ *         filme:
+ *           $ref: '#/components/schemas/Filme'
  *
  *     AvaliacaoInput:
  *       type: object
@@ -78,6 +70,8 @@
  *   post:
  *     summary: Cria uma nova avaliação
  *     tags: [Avaliação]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -97,17 +91,107 @@
 
 /**
  * @swagger
- * /avaliacoes/usuario/{idUsuario}:
- *   get:
- *     summary: Lista todas as avaliações feitas por um usuário
+ * /avaliacao/{idUsuario}/{idFilme}:
+ *   put:
+ *     summary: Atualiza uma avaliação existente
  *     tags: [Avaliação]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: idUsuario
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do usuário
+ *       - in: path
+ *         name: idFilme
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AvaliacaoUpdate'
+ *     responses:
+ *       200:
+ *         description: Avaliação atualizada com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Avaliacao'
+ *       404:
+ *         description: Avaliação não encontrada
+ *       401:
+ *         description: Não autorizado
+ */
+
+/**
+ * @swagger
+ * /avaliacao/{idUsuario}/{idFilme}:
+ *   delete:
+ *     summary: Exclui logicamente uma avaliação
+ *     tags: [Avaliação]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: idUsuario
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: idFilme
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Avaliação excluída com sucesso
+ *       404:
+ *         description: Avaliação não encontrada
+ *       401:
+ *         description: Não autorizado
+ */
+
+/**
+ * @swagger
+ * /avaliacoes:
+ *   get:
+ *     summary: Lista todas as avaliações (admin)
+ *     tags: [Avaliação]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de avaliações
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Avaliacao'
+ *       401:
+ *         description: Não autorizado
+ *       403:
+ *         description: Acesso negado
+ */
+
+/**
+ * @swagger
+ * /avaliacoes/usuario/{idUsuario}:
+ *   get:
+ *     summary: Lista todas as avaliações feitas por um usuário
+ *     tags: [Avaliação]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: idUsuario
+ *         required: true
+ *         schema:
+ *           type: integer
  *     responses:
  *       200:
  *         description: Lista de avaliações do usuário
@@ -119,6 +203,8 @@
  *                 $ref: '#/components/schemas/Avaliacao'
  *       404:
  *         description: Nenhuma avaliação encontrada para este usuário
+ *       401:
+ *         description: Não autorizado
  */
 
 /**
@@ -133,7 +219,6 @@
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID do filme
  *     responses:
  *       200:
  *         description: Lista de avaliações do filme
@@ -145,56 +230,4 @@
  *                 $ref: '#/components/schemas/Avaliacao'
  *       404:
  *         description: Nenhuma avaliação encontrada para este filme
- */
-
-/**
- * @swagger
- * /avaliacao/{id}:
- *   put:
- *     summary: Atualiza uma avaliação existente
- *     tags: [Avaliação]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID da avaliação
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/AvaliacaoUpdate'
- *     responses:
- *       200:
- *         description: Avaliação atualizada com sucesso
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Avaliacao'
- *       400:
- *         description: Dados inválidos
- *       404:
- *         description: Avaliação não encontrada
- */
-
-/**
- * @swagger
- * /avaliacao/{id}:
- *   delete:
- *     summary: Exclui logicamente uma avaliação
- *     tags: [Avaliação]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID da avaliação
- *     responses:
- *       204:
- *         description: Avaliação excluída com sucesso
- *       404:
- *         description: Avaliação não encontrada
  */

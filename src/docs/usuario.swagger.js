@@ -214,36 +214,3 @@
  *       401:
  *         description: Não autorizado
  */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Usuario:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *           example: 1
- *         nome:
- *           type: string
- *           example: João da Silva
- *         email:
- *           type: string
- *           example: joao@email.com
- *         apelido:
- *           type: string
- *           example: joaosilva
- *         dataNascimento:
- *           type: string
- *           format: date
- *           example: 2000-05-20
- *         tipoUsuario:
- *           type: string
- *           enum: [admin, comum]
- *           example: comum
- *         status:
- *           type: integer
- *           example: 1
- */
-

@@ -25,16 +25,13 @@
  *           example: 1
  *         nome:
  *           type: string
- *           example: "O Senhor dos Anéis"
+ *           example: "O Senhor dos Anéis: A Sociedade do Anel"
  *         diretor:
  *           type: string
  *           example: "Peter Jackson"
  *         anoLancamento:
  *           type: integer
  *           example: 2001
- *         generoId:
- *           type: integer
- *           example: 2
  *         duracao:
  *           type: integer
  *           example: 178
@@ -47,10 +44,24 @@
  *         poster:
  *           type: string
  *           format: uri
- *           example: "https://exemplo.com/poster.jpg"
+ *           example: "https://image.tmdb.org/t/p/original/zoht5lmzBXxL7FWkHHu3JISGzEg.jpg"
  *         status:
  *           type: integer
  *           example: 1
+ *         mediaAvaliacoes:
+ *           type: number
+ *           example: 8.5
+ *         generos:
+ *           type: array
+ *           items:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 example: 2
+ *               descricao:
+ *                 type: string
+ *                 example: "Comédia"
  */
 
 /**
@@ -59,6 +70,8 @@
  *   post:
  *     summary: Cria um novo filme
  *     tags: [Filme]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -113,6 +126,10 @@
  *     responses:
  *       200:
  *         description: Filme encontrado com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Filme'
  *       400:
  *         description: ID inválido
  *       401:
@@ -129,6 +146,8 @@
  *   put:
  *     summary: Atualiza um filme pelo ID
  *     tags: [Filme]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -161,6 +180,8 @@
  *   delete:
  *     summary: Deleta logicamente um filme (status = 0)
  *     tags: [Filme]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -187,6 +208,8 @@
  *   patch:
  *     summary: Reativa um filme logicamente excluído (status = 1)
  *     tags: [Filme]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -205,4 +228,30 @@
  *         description: Filme não encontrado
  *       500:
  *         description: Erro interno no servidor
+ */
+
+/**
+ * @swagger
+ * /filmes/search:
+ *   get:
+ *     summary: Busca filmes pelo nome
+ *     tags: [Filme]
+ *     parameters:
+ *       - in: query
+ *         name: nome
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nome (ou parte) do filme para busca
+ *     responses:
+ *       200:
+ *         description: Lista de filmes encontrados
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Filme'
+ *       400:
+ *         description: Parâmetro "nome" obrigatório
  */
