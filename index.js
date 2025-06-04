@@ -9,6 +9,7 @@ const usuariosRoutes = require('./src/routes/usuariosRoutes');
 const filmesRoutes = require('./src/routes/filmesRoutes');
 const avaliacoesRoutes = require('./src/routes/avaliacaoRoutes');
 const authRoutes = require('./src/routes/authRoutes');
+const generosRoutes = require('./src/routes/generosRoutes');
 
 const cors = require('cors');
 
@@ -22,6 +23,7 @@ app.use(usuariosRoutes);
 app.use(filmesRoutes);
 app.use(avaliacoesRoutes);
 app.use(authRoutes);
+app.use(generosRoutes);
 
 app.use(errorHandler);
 
