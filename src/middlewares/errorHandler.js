@@ -14,7 +14,7 @@ const errorHandler = (err, req, res, next) => {
   }
 
   // Caso contrário, trata como um erro genérico
-  console.error(err); // Log do erro para depuração
+  console.error(err); 
   res.status(500).json({ error: 'Erro interno do servidor.' });
 };
 

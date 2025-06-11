@@ -128,7 +128,6 @@ const deleteAvaliacao = async ({ idUsuario, idFilme }) => {
     where: { idUsuario_idFilme: { idUsuario: Number(idUsuario), idFilme: Number(idFilme) } },
   });
 
-  // Recalcula a média após exclusão
   const media = await recalculateMediaAvaliacoes(avaliacao.idFilme);
 
   return media;
@@ -140,7 +139,6 @@ const recalculateMediaAvaliacoes = async (idFilme) => {
     _avg: { nota: true },
   });
 
-  // Atualiza o campo mediaAvaliacoes no modelo Filme
   await prisma.filme.update({
     where: { id: idFilme },
     data: { mediaAvaliacoes: media._avg.nota || 0 },

@@ -85,9 +85,9 @@ const updateFilme = async (id, data) => {
 
   // Atualiza os vínculos de gêneros
   if (Array.isArray(generoIds)) {
-    // Remove todos os vínculos antigos
+    
     await prisma.generoFilme.deleteMany({ where: { idFilme: filmeAtualizado.id } });
-    // Cria os novos vínculos
+    
     await Promise.all(
       generoIds.map(idGenero =>
         prisma.generoFilme.create({
@@ -100,7 +100,7 @@ const updateFilme = async (id, data) => {
     );
   }
 
-  // Retorna o filme já com os gêneros vinculados
+  
   return await prisma.filme.findUnique({
     where: { id: filmeAtualizado.id },
     include: {

@@ -10,7 +10,7 @@ const authenticateUser = (req, res, next) => {
 
   try {
     const decoded = verifyToken(token);
-    req.user = decoded; // Armazena os dados do usuário no objeto req
+    req.user = decoded; 
     next();
   } catch (error) {
     return res.status(401).json({ error: 'Token inválido.' });
