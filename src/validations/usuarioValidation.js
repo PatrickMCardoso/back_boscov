@@ -16,12 +16,14 @@ const UsuarioSchema = z.object({
     .nullable()
     .optional(),
 
-    dataNascimento: z
+  dataNascimento: z
     .string()
     .refine((val) => {
       const date = new Date(val);
-      return !isNaN(date.getTime());
-    }, { message: 'O campo "dataNascimento" deve ser uma data válida.' }),
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); 
+      return !isNaN(date.getTime()) && date <= today;
+    }, { message: 'O campo "dataNascimento" deve ser uma data válida e não pode ser no futuro.' }),
 
   tipoUsuario: z.enum(['admin', 'comum']).optional(),
 
