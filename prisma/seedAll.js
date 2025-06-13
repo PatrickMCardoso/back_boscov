@@ -297,7 +297,7 @@ async function main() {
         duracao: 90,
         produtora: "DreamWorks",
         classificacao: "Livre",
-        poster: "https://image.tmdb.org/t/p/original/1TUg5pO1VZ4B0Q1amk3OlXvlpXV.jpg",
+        poster: "https://image.tmdb.org/t/p/original/iB64vpL3dIObOtMZgX3RqdVdQDc.jpg",
         status: 1,
         mediaAvaliacoes: 8.25,
       },
