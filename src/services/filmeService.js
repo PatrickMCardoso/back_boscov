@@ -66,7 +66,20 @@ const getFilmeById = async (id) => {
   if (!filme) {
     throw new NotFoundError('Filme não encontrado.');
   }
-  return filme;
+
+  // Calcula a média das avaliações
+  const avaliacoes = await prisma.avaliacao.findMany({
+    where: { idFilme: Number(id) }
+  });
+  const mediaAvaliacoes = avaliacoes.length
+    ? avaliacoes.reduce((acc, cur) => acc + cur.nota, 0) / avaliacoes.length
+    : null;
+
+  // Adiciona a média ao objeto retornado
+  return {
+    ...filme,
+    mediaAvaliacoes: mediaAvaliacoes !== null ? Number(mediaAvaliacoes.toFixed(2)) : null,
+  };
 };
 
 const updateFilme = async (id, data) => {
@@ -85,9 +98,9 @@ const updateFilme = async (id, data) => {
 
   // Atualiza os vínculos de gêneros
   if (Array.isArray(generoIds)) {
-    
+
     await prisma.generoFilme.deleteMany({ where: { idFilme: filmeAtualizado.id } });
-    
+
     await Promise.all(
       generoIds.map(idGenero =>
         prisma.generoFilme.create({
@@ -100,7 +113,7 @@ const updateFilme = async (id, data) => {
     );
   }
 
-  
+
   return await prisma.filme.findUnique({
     where: { id: filmeAtualizado.id },
     include: {
