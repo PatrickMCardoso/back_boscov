@@ -11,7 +11,6 @@ const createFilme = async (data) => {
     throw new Error('Já existe um filme com este nome.');
   }
 
-  // Cria o filme
   const filme = await prisma.filme.create({ data: filmeData });
 
   // Cria os vínculos em GeneroFilme
@@ -28,7 +27,6 @@ const createFilme = async (data) => {
     );
   }
 
-  // Retorna o filme já com os gêneros vinculados
   return await prisma.filme.findUnique({
     where: { id: filme.id },
     include: {
@@ -67,7 +65,6 @@ const getFilmeById = async (id) => {
     throw new NotFoundError('Filme não encontrado.');
   }
 
-  // Calcula a média das avaliações
   const avaliacoes = await prisma.avaliacao.findMany({
     where: { idFilme: Number(id) }
   });
@@ -75,7 +72,6 @@ const getFilmeById = async (id) => {
     ? avaliacoes.reduce((acc, cur) => acc + cur.nota, 0) / avaliacoes.length
     : null;
 
-  // Adiciona a média ao objeto retornado
   return {
     ...filme,
     mediaAvaliacoes: mediaAvaliacoes !== null ? Number(mediaAvaliacoes.toFixed(2)) : null,
@@ -90,13 +86,11 @@ const updateFilme = async (id, data) => {
     throw new NotFoundError('Filme não encontrado ou inativo.');
   }
 
-  // Atualiza dados do filme
   const filmeAtualizado = await prisma.filme.update({
     where: { id: Number(id) },
     data: filmeData,
   });
 
-  // Atualiza os vínculos de gêneros
   if (Array.isArray(generoIds)) {
 
     await prisma.generoFilme.deleteMany({ where: { idFilme: filmeAtualizado.id } });
