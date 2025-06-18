@@ -13,7 +13,6 @@ const createFilme = async (data) => {
 
   const filme = await prisma.filme.create({ data: filmeData });
 
-  // Cria os vínculos em GeneroFilme
   if (Array.isArray(generoIds)) {
     await Promise.all(
       generoIds.map(idGenero =>

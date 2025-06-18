@@ -16,7 +16,6 @@ const createAvaliacao = async (data) => {
     throw new NotFoundError('Filme não encontrado ou inativo.');
   }
 
-  // upsert: se já existe, faz update; se não, faz create
   const avaliacao = await prisma.avaliacao.upsert({
     where: {
       idUsuario_idFilme: {
@@ -36,7 +35,6 @@ const createAvaliacao = async (data) => {
     }
   });
 
-  // Recalcula a média de avaliações do filme
   await recalculateMediaAvaliacoes(data.idFilme);
 
   return avaliacao;

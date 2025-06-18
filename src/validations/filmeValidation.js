@@ -35,7 +35,7 @@ const FilmeSchema = z.object({
 })
   .strict({ message: 'Campos não reconhecidos foram enviados.' });
 
-const FilmeUpdateSchema = FilmeSchema.partial(); // todos os campos opcionais
+const FilmeUpdateSchema = FilmeSchema.partial(); 
 
 module.exports = {
   FilmeSchema,

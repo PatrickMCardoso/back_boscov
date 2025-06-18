@@ -22,7 +22,6 @@ async function seedGeneros() {
   console.log("Gêneros adicionados com sucesso!");
 }
 
-// Chame a função apenas se necessário
 //seedGeneros();
 
 module.exports = prisma;
